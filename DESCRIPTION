@@ -1,26 +1,32 @@
 Type: Package
 Package: SLPresElection
-Title: Presidential Election Data of "Sri Lanka" from 1982 to 2015
-Version: 1.0.0
+Title: Presidential Election Data of "Sri Lanka" from 1982 to 2019
+Version: 1.1.0
 Authors@R: 
     person("Amalan", "Mahendran", , "amalan0595@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0643-9052"))
-Description: Presidential Election data of "Sri Lanka"" is stored in Pdf
-    files, through Pdf scraping they are converted into data-frames and
-    stored in this R package.
+Description: Provides Sri Lankan presidential election results for
+    1982, 1988, 1994, 1999, 2005, 2010, 2015, and 2019. The datasets
+    contain candidate vote counts, reported percentages, and summary
+    statistics for polling divisions and district results, including
+    postal and displaced votes where available. Results were extracted
+    from PDF documents and prepared in a consistent tabular format.
 License: MIT + file LICENSE
-URL: https://github.com/Amalan-ConStat/SLPresElection,
-        https://amalan-constat.github.io/SLPresElection/index.html
+URL:
+        https://github.com/Amalan-ConStat/SLPresElection,https://amalan-constat.github.io/SLPresElection/index.html
 BugReports: https://github.com/Amalan-ConStat/SLPresElection/issues
-Depends: R (>= 4.0.0)
-Suggests: spelling, testthat
+Depends: R (>= 4.1.0)
+Suggests: knitr, rmarkdown, spelling, testthat
+VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
 LazyData: TRUE
-RoxygenNote: 7.2.3
+LazyDataCompression: xz
+Config/roxygen2/version: 8.1.1
 NeedsCompilation: no
-Packaged: 2023-01-15 04:50:13 UTC; amala
-Author: Amalan Mahendran [aut, cre] (<https://orcid.org/0000-0002-0643-9052>)
+Packaged: 2026-10-14 14:43:48 UTC; amala
+Author: Amalan Mahendran [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-0643-9052>)
 Maintainer: Amalan Mahendran <amalan0595@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-01-17 16:40:05 UTC
+Date/Publication: 2026-10-14 15:02:06 UTC

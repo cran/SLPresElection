@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>2019 Presidential Election: Data Preparation</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">2019 Presidential Election: Data
+Preparation</h1>
+
+
+
+<div id="initial-ocr-extraction-prompt" class="section level2">
+<h2>Initial OCR extraction prompt</h2>
+<p>The following prompt was used to extract the 2019 election results
+from the uploaded PDFs into the supplied ODS template. The original
+wording is preserved.</p>
+<p>“The pdf file i have uploaded contains the results of the election.
+Each page contains results for a electoral District. The results are in
+tables, where four columns exist with the column names Name of the
+candidate, Party Abbreviation, Votes Received, Percentage. There are 35
+candidates. After the candidate results the summary is Total Valid
+Votes, Rejected Votes, Total Polled, Registered No of Electors as
+consecutive rows. These summaries also contain counts and percentages. i
+have uploaded an ods file with candidate names and summaries, but not
+the counts and percentages. Can you extract the counts and percentages
+and transfer it to the ods file for each electoral district, it should
+be one sheet for one electoral district. Can you do that ? Use OCR
+?”</p>
+<p>The same request was subsequently applied to the remaining district
+PDFs. Counts and percentages were extracted for all 35 candidates and
+the four summary rows in each result table. Subsequent validation
+identified the missing tables, misplaced pages, and source discrepancies
+documented below.</p>
+</div>
+<div id="preparation-scope" class="section level2">
+<h2>Preparation scope</h2>
+<p>This article documents the changes implemented for the 2019
+presidential election. It preserves the exact capitalisation of the
+labels used in that script. Replacement values and source findings have
+not been independently verified for this documentation.</p>
+</div>
+<div id="supplemented-missing-results" class="section level2">
+<h2>Supplemented missing results</h2>
+<p>The narrative documents adding Polling Division K — Kilinochchi,
+which was omitted from the 12-page Jaffna PDF. The added table contained
+all 35 candidates and four summary rows and became the thirteenth
+workbook sheet. The narrative attributes the replacement to the official
+Election Commission result; the supplied R code imports the completed
+workbook rather than downloading or performing that replacement.</p>
+</div>
+<div id="replaced-misplaced-result-tables" class="section level2">
+<h2>Replaced misplaced result tables</h2>
+<p>The following replacements are documented. Page numbers refer to the
+original PDFs, counting the first page as page 1.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Uploaded PDF</th>
+<th align="right">Page</th>
+<th>Supplied result</th>
+<th>Required result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Colombo</td>
+<td align="right">2</td>
+<td>Digamadulla postal votes</td>
+<td>Colombo postal votes</td>
+</tr>
+<tr class="even">
+<td>Colombo</td>
+<td align="right">5</td>
+<td>Anuradhapura East</td>
+<td>Borella</td>
+</tr>
+<tr class="odd">
+<td>Kegalle</td>
+<td align="right">2</td>
+<td>Kurunegala postal votes</td>
+<td>Kegalle postal votes</td>
+</tr>
+<tr class="even">
+<td>Ratnapura</td>
+<td align="right">10</td>
+<td>Kolonnawa in Colombo</td>
+<td>Kolonna in Ratnapura</td>
+</tr>
+</tbody>
+</table>
+<p>The narrative states that the extracted tables were corrected while
+the original PDFs were retained unchanged.</p>
+</div>
+<div id="preserved-registered-elector-discrepancies" class="section level2">
+<h2>Preserved registered-elector discrepancies</h2>
+<p>Printed district totals and component totals were retained and
+documented rather than forced to agree. Component totals include
+postal-vote and polling-division elector counts.</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="26%" />
+<col width="26%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>District</th>
+<th align="right">Printed district total</th>
+<th align="right">Component total</th>
+<th align="right">Component minus district</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hambantota</td>
+<td align="right">485,786</td>
+<td align="right">485,986</td>
+<td align="right">+200</td>
+</tr>
+<tr class="even">
+<td>Jaffna</td>
+<td align="right">564,714</td>
+<td align="right">564,984</td>
+<td align="right">+270</td>
+</tr>
+<tr class="odd">
+<td>Kalutara</td>
+<td align="right">955,079</td>
+<td align="right">955,080</td>
+<td align="right">+1</td>
+</tr>
+<tr class="even">
+<td>Ratnapura</td>
+<td align="right">864,978</td>
+<td align="right">864,979</td>
+<td align="right">+1</td>
+</tr>
+</tbody>
+</table>
+<p>These are registered-elector disagreements, not candidate-vote
+disagreements. The comparison alone does not identify the incorrect
+individual count.</p>
+</div>
+<div id="imported-and-checked-the-ods-tables" class="section level2">
+<h2>Imported and checked the ODS tables</h2>
+<p>Each sheet is read from <code>A1:D41</code>, excluding notes below
+the result table. The first sheet’s name supplies the district name.
+Labels are trimmed and internal whitespace condensed without
+lowercasing. Counts and percentages are converted to numeric values.</p>
+<p>The code stops if a table has other than 35 candidate rows, other
+than four summary rows, or any missing counts. It also stops on
+duplicate combinations of year, district, electorate, and row label.</p>
+</div>
+<div id="aligned-summary-and-reporting-labels" class="section level2">
+<h2>Aligned summary and reporting labels</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Original summary label</th>
+<th>Replacement label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Total Valid Votes</td>
+<td>Total No of Valid Votes</td>
+</tr>
+<tr class="even">
+<td>Rejected Votes</td>
+<td>No of Rejected Votes</td>
+</tr>
+<tr class="odd">
+<td>Total Polled</td>
+<td>Total No of Votes Polled</td>
+</tr>
+<tr class="even">
+<td>Registered No of Electors</td>
+<td>No of Registered Electors</td>
+</tr>
+</tbody>
+</table>
+<p>District-total tables are labelled
+<code>Final District Results</code>, and postal tables are labelled
+<code>Postal District Votes</code>. Polling-division prefixes such as
+<code>A -</code> are removed, and spaces in the remaining electorate
+names are converted to hyphens.</p>
+<p>ODS percentage proportions are multiplied by 100 and rounded to two
+decimal places, so 0.5949 becomes 59.49. This changes the storage scale,
+rather than recalculating a percentage from vote counts.</p>
+</div>
+<div id="aligned-district-names" class="section level2">
+<h2>Aligned district names</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Original district label</th>
+<th>Replacement label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kandy</td>
+<td>Mahanuwara</td>
+</tr>
+<tr class="even">
+<td>Moneragala</td>
+<td>Monaragala</td>
+</tr>
+<tr class="odd">
+<td>Nuwara Eliya</td>
+<td>Nuwara-Eliya</td>
+</tr>
+</tbody>
+</table>
+<p>This recoding is applied to the combined <code>Election_Data</code>
+without a year restriction. The subsequent electorate mapping is
+restricted to 2019 records. Capitalisation is preserved in the explicit
+replacement labels.</p>
+</div>
+<div id="aligned-electorate-names-with-2015" class="section level2">
+<h2>Aligned electorate names with 2015</h2>
+<p>The code applies the following 26 district-specific mappings to
+2019:</p>
+<table>
+<thead>
+<tr class="header">
+<th>District</th>
+<th>Original electorate label</th>
+<th>Replacement label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Anuradhapura</td>
+<td>Horowpothana</td>
+<td>Horowapatana</td>
+</tr>
+<tr class="even">
+<td>Anuradhapura</td>
+<td>Madawachchiya</td>
+<td>Medawachchiya</td>
+</tr>
+<tr class="odd">
+<td>Anuradhapura</td>
+<td>Mihinthale</td>
+<td>Mihintale</td>
+</tr>
+<tr class="even">
+<td>Badulla</td>
+<td>Haliela</td>
+<td>Hali-Ela</td>
+</tr>
+<tr class="odd">
+<td>Badulla</td>
+<td>Haputhale</td>
+<td>Haputale</td>
+</tr>
+<tr class="even">
+<td>Badulla</td>
+<td>Mahiyangana</td>
+<td>Mahiyangane</td>
+</tr>
+<tr class="odd">
+<td>Badulla</td>
+<td>Uvaparanagama</td>
+<td>Uva-Paranagama</td>
+</tr>
+<tr class="even">
+<td>Batticaloa</td>
+<td>Kalkudah</td>
+<td>Kalkuda</td>
+</tr>
+<tr class="odd">
+<td>Galle</td>
+<td>Benthara-Elpitiya</td>
+<td>Bentara-Elpitiya</td>
+</tr>
+<tr class="even">
+<td>Galle</td>
+<td>Rathgama</td>
+<td>Ratgama</td>
+</tr>
+<tr class="odd">
+<td>Gampaha</td>
+<td>Aththanagalla</td>
+<td>Attanagalla</td>
+</tr>
+<tr class="even">
+<td>Gampaha</td>
+<td>Meerigama</td>
+<td>Mirigama</td>
+</tr>
+<tr class="odd">
+<td>Jaffna</td>
+<td>Uduppiddy</td>
+<td>Udupiddy</td>
+</tr>
+<tr class="even">
+<td>Kalutara</td>
+<td>Agalawaththa</td>
+<td>Agalawatta</td>
+</tr>
+<tr class="odd">
+<td>Kalutara</td>
+<td>Bulathsinghala</td>
+<td>Bulathsinhala</td>
+</tr>
+<tr class="even">
+<td>Kalutara</td>
+<td>Mathugama</td>
+<td>Matugama</td>
+</tr>
+<tr class="odd">
+<td>Kegalle</td>
+<td>Aranayaka</td>
+<td>Aranayake</td>
+</tr>
+<tr class="even">
+<td>Mahanuwara</td>
+<td>Galgedara</td>
+<td>Galagedara</td>
+</tr>
+<tr class="odd">
+<td>Mahanuwara</td>
+<td>Harispatthuwa</td>
+<td>Harispattuwa</td>
+</tr>
+<tr class="even">
+<td>Mahanuwara</td>
+<td>Pathadumbara</td>
+<td>Patha-Dumbara</td>
+</tr>
+<tr class="odd">
+<td>Mahanuwara</td>
+<td>Udadumbara</td>
+<td>Udu-Dumbara</td>
+</tr>
+<tr class="even">
+<td>Matale</td>
+<td>Ratthota</td>
+<td>Rattota</td>
+</tr>
+<tr class="odd">
+<td>Monaragala</td>
+<td>Bibila</td>
+<td>Bibile</td>
+</tr>
+<tr class="even">
+<td>Nuwara-Eliya</td>
+<td>Kothmale</td>
+<td>Kotmale</td>
+</tr>
+<tr class="odd">
+<td>Trincomalee</td>
+<td>Muthur</td>
+<td>Mutur</td>
+</tr>
+<tr class="even">
+<td>Trincomalee</td>
+<td>Seruvila</td>
+<td>Seruwila</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="validation-findings-and-export-scope" class="section level2">
+<h2>Validation findings and export scope</h2>
+<p>The narrative reports correcting OCR errors against scans and
+checking candidate totals against valid votes, valid plus rejected votes
+against polled votes, and component counts against district totals.
+Those vote-reconciliation checks are described in prose; the executable
+2019 import implements structural and duplicate checks, not those
+arithmetic assertions.</p>
+<p>Presence tables are constructed before and after the name mappings to
+support inspection across election years. They do not automatically
+assert that every expected label matches.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

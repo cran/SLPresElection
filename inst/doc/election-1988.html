@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>1988 Presidential Election: Data Preparation</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">1988 Presidential Election: Data
+Preparation</h1>
+
+
+
+<div id="preparation-scope" class="section level2">
+<h2>Preparation scope</h2>
+<p>This article documents the changes implemented for the 1988
+presidential election. It preserves the exact capitalisation of the
+labels used in that script. Replacement values and source findings have
+not been independently verified for this documentation.</p>
+</div>
+<div id="postal-registered-elector-rows" class="section level2">
+<h2>Postal registered-elector rows</h2>
+<p>Removed <code>No of Registered Electors</code> rows for
+<code>Postal District Votes</code> where the count is missing.</p>
+</div>
+<div id="selected-percentage-calculations" class="section level2">
+<h2>Selected percentage calculations</h2>
+<table>
+<colgroup>
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>District</th>
+<th>Reporting table</th>
+<th>Measure</th>
+<th>Formula</th>
+<th align="right">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Trincomalee</td>
+<td>Postal District Votes</td>
+<td>Total No of Valid Votes</td>
+<td>100 × 246 / 251</td>
+<td align="right">98.01</td>
+</tr>
+<tr class="even">
+<td>Trincomalee</td>
+<td>Final District Results</td>
+<td>Total No of Votes Polled</td>
+<td>100 × 81,949 / 152,289</td>
+<td align="right">53.81</td>
+</tr>
+<tr class="odd">
+<td>Badulla</td>
+<td>Final District Results</td>
+<td>Total No of Votes Polled</td>
+<td>100 × 137,718 / 329,462</td>
+<td align="right">41.80</td>
+</tr>
+<tr class="even">
+<td>Kurunegala</td>
+<td>Final District Results</td>
+<td>Total No of Valid Votes</td>
+<td>100 × 388,602 / 392,883</td>
+<td align="right">98.91</td>
+</tr>
+<tr class="odd">
+<td>Galle</td>
+<td>Baddegama</td>
+<td>Total No of Votes Polled</td>
+<td>100 × 49,163 / 65,351</td>
+<td align="right">75.23</td>
+</tr>
+</tbody>
+</table>
+<p>Kurunegala’s calculation replaces the 9,077.37% value described in
+the comments. Valid-vote percentages in these formulas use total polled
+votes as their denominator; turnout percentages use registered
+electors.</p>
+</div>
+<div id="missing-vote-counts-and-associated-percentages" class="section level2">
+<h2>Missing vote counts and associated percentages</h2>
+<p>Where <code>Votes</code> is missing, <code>Percentage</code> is set
+to zero unless the row is <code>Total No of Votes Polled</code>. All
+remaining missing vote counts are then replaced with zero. This rule is
+based on missing counts; it does not fill every missing percentage.</p>
+</div>
+<div id="checks-and-documentation-limits" class="section level2">
+<h2>Checks and documentation limits</h2>
+<p>The Baddegama comment mentions 49,613 polled votes, but the formula
+uses 49,163. This conflict should be resolved against the source before
+claiming the replacement percentage is verified.</p>
+<p>The national reference figures written in the script also require
+review: candidate figures sum to 5,094,757 against stated valid votes of
+5,094,775. Stated valid votes plus rejected votes sum to 5,186,220
+against stated total polled votes of 5,186,277. These observations
+concern the script’s written reference figures.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
