@@ -1,9 +1,9 @@
-f6a1817278169b896b478565776876bd *DESCRIPTION
+978d78f4901fc9bcc542356c9608c966 *DESCRIPTION
 38249e4546968aeb4d200ea621c682a3 *LICENSE
 b5b2e20c75457107297b566908b8c29d *NAMESPACE
-7bac9c922ff70bedd8521a96595db3eb *R/Data.R
-0dd8f862e1e969ea4fb6f0589aaf26ff *R/zzz.R
-4b1d56535e08139389a4092cbbc468fe *build/vignette.rds
+f2a35e9b33ab04e01357cb2a1dbc59b4 *R/Data.R
+caa149a3c10c8faab749f7a9d9da4cfd *R/zzz.R
+82a93be9b2533c2bd05eb3caa6aa7dbc *build/vignette.rds
 3f0a420cb006238b109c6119c3d3fdd8 *data/Election1982.rda
 4aa400254d422347514aed6dce2ac907 *data/Election1988.rda
 7403a7c277c8b08f01e139e408ceea75 *data/Election1994.rda
@@ -12,7 +12,8 @@ d70db7e5db939b9f7d0baadc51e216f1 *data/Election2005.rda
 d75926b0066fd647298d41ee50508e2a *data/Election2010.rda
 b15a547a3927e3fd7e86e5003bfaf974 *data/Election2015.rda
 e1bf00f7c9aa833e8ee6d269de604b81 *data/Election2019.rda
-c914385adee9f9c25789f2af48397f72 *inst/WORDLIST
+0317d39bceb9005852759bb11efe1a7e *data/Election2024.rda
+747a6cda8cde4738fd74380166011916 *inst/WORDLIST
 8892227ac5143f730e8db658fa7f0bcf *inst/doc/election-1982.Rmd
 8cfb8dee633a1db6b64715ffaa7edd4d *inst/doc/election-1982.html
 ba3074f0736b62f0202c742b492af514 *inst/doc/election-1988.Rmd
@@ -29,6 +30,8 @@ ae591422ec659f52fe94d15504bf2aaf *inst/doc/election-2005.html
 d36f8d69c28e91aed95a6c96be94aead *inst/doc/election-2015.html
 11ff646edcd1e3c77f5142f04ac94174 *inst/doc/election-2019.Rmd
 3e9d8cce78f1c6b13e55f578b402ffea *inst/doc/election-2019.html
+176650a4450e222b6e564e9844a2b11a *inst/doc/election-2024.Rmd
+fff4502d226c8aa2426ccdf9e41bc158 *inst/doc/election-2024.html
 7b6eff7c6f1fe77ffda15d29786e3494 *man/Election1982.Rd
 24a9ba00dbe2b943e88923a12ea6844d *man/Election1988.Rd
 4611b79983e9d7f5dae7e3f29352f598 *man/Election1994.Rd
@@ -37,9 +40,10 @@ b6c32642ff62d3cbe665afe61be958fd *man/Election1999.Rd
 d36f8346e93791a5fb404f2423aa5d28 *man/Election2010.Rd
 9f1b8804fc517c176e89190eec288ddb *man/Election2015.Rd
 1c72f3370cb2d6b3c352872fd567d8b3 *man/Election2019.Rd
+f5cb9e9b3a5a8979b094fa816862b5e9 *man/Election2024.Rd
 c1e3030b989b3692042e74ba3c986529 *man/figures/Registered_and_Polled_Votes-1.png
-22ec12baccb6f462793916c6e13ca592 *man/figures/Registered_and_Polled_Votes_over_the_years-1.png
-f2c3f690e285fcf2ffd983e2f37f11b8 *man/figures/Rejected_Votes_over_the_years-1.png
+d59b0341a639694fca53e03ce9bdf5a4 *man/figures/Registered_and_Polled_Votes_over_the_years-1.png
+94fc228deff5f948c3d10b270527e9ac *man/figures/Rejected_Votes_over_the_years-1.png
 86969ce0223c4b06d1a872f1304f4710 *man/figures/logo.png
 332173f20d20942c02019350ea4dcadc *tests/spelling.R
 1e8985ef792bde098b488fda20095059 *tests/testthat.R
@@ -58,3 +62,4 @@ c8f3ca7365540966cfbbdddb360de46b *vignettes/election-2005.Rmd
 050074b1d25b654f08f1169a99962778 *vignettes/election-2010.Rmd
 39ee74c726b6e9b9b129424c4e3b56bc *vignettes/election-2015.Rmd
 11ff646edcd1e3c77f5142f04ac94174 *vignettes/election-2019.Rmd
+176650a4450e222b6e564e9844a2b11a *vignettes/election-2024.Rmd

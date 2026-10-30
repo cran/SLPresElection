@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>2024 Presidential Election: Data Preparation</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">2024 Presidential Election: Data
+Preparation</h1>
+
+
+
+<div id="preparation-scope" class="section level2">
+<h2>Preparation scope</h2>
+<p>This article documents the import, preparation, and validation steps
+implemented for the 2024 presidential election dataset.</p>
+<p>Results were extracted from PDF tables into district-specific ODS
+workbooks. Each workbook contains separate worksheets for polling
+divisions and postal votes. The completed workbooks were subsequently
+converted into the common six-column dataset format used by
+SLPresElection.</p>
+<p>The preparation script standardises summary labels and candidate
+names, aligns selected district and electorate names with earlier
+datasets, checks vote totals and candidate percentages, and calculates
+district totals from the component results.</p>
+</div>
+<div id="ocr-extraction-prompt" class="section level2">
+<h2>OCR extraction prompt</h2>
+<p>The following prompt was used to request extraction of the complete
+Jaffna district results into the supplied ODS template. It illustrates
+the extraction requirements used for the 2024 workbooks. Filenames,
+district names, and the number of worksheets were adjusted for other
+districts.</p>
+<p>The prompt specifies the requested extraction and validation steps.
+The subsequent sections document the checks implemented in the data
+preparation script.</p>
+<pre class="text"><code>Extract the Sri Lanka 2024 presidential election results for Jaffna electoral district from the attached PDFs and populate the attached ODS template.
+
+Files supplied:
+  10_A(1).pdf, 10_B(1).pdf, 10_C(1).pdf, 10_D(1).pdf,
+10_E(1).pdf, 10_F.pdf, 10_G.pdf, 10_H.pdf, 10_I.pdf,
+10_J.pdf, 10_K.pdf, and 10_PV.pdf.
+
+Create one ODS workbook named Jaffna_2024.ods, with one sheet for each polling division A–K and one sheet for Postal Votes: 12 sheets in total. Identify the polling-division names from the PDFs.
+
+Requirements:
+  1. Use OCR where necessary and check extracted values against the PDF scans.
+2. Preserve the template’s candidate names, party abbreviations, capitalisation, row order, and formatting exactly. Populate only the votes and percentage columns.
+3. There are 38 candidate rows. The source numbering skips candidate number 4; do not insert an extra candidate or shift subsequent rows.
+4. Match results by candidate identity, rather than assuming that OCR row positions are correct.
+5. Populate all four summary rows:
+  - Total Number of Valid Votes
+- Number of Rejected Votes
+- Number of Votes Polled
+- Number of Registered Electors
+6. Preserve the percentages printed in the PDFs. Store them as numeric percentages with percentage formatting. Leave a printed dash blank; do not convert it to zero.
+7. Store vote counts as numbers, not text.
+8. For every sheet, verify that:
+  - All 38 candidates and four summary rows are present.
+- Candidate votes sum to Total Number of Valid Votes.
+- Valid votes + rejected votes = Number of Votes Polled.
+- Candidate percentages agree with candidate votes / valid votes, allowing for rounding.
+- Valid and rejected percentages use votes polled as the denominator.
+- Turnout percentage uses registered electors as the denominator.
+9. Do not change a printed figure simply to make a check pass. Report any source discrepancy separately from OCR errors.
+10. Check for duplicate, missing, or incorrectly labelled result tables. Add a brief source filename note to each sheet.
+11. Do not create a district-total result sheet unless an official district-total table is supplied. Any calculated aggregate must be clearly labelled as calculated.
+12. Return the completed downloadable ODS workbook and a brief account of validation results and any unresolved issues.
+
+Process all 12 PDFs. A previous chat processed only A–E; this upload supplies A–K and postal votes, so the new workbook should contain all 12 result tables.</code></pre>
+<p>District totals were subsequently calculated during R data
+preparation, as described below. This was separate from the OCR
+extraction request, which did not request a calculated district-total
+worksheet.</p>
+</div>
+<div id="standardised-summary-labels" class="section level2">
+<h2>Standardised summary labels</h2>
+<p>The following source labels are mapped to the common summary
+labels.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Source label</th>
+<th>Standardised label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Total Number of Valid Votes</td>
+<td>Total No of Valid Votes</td>
+</tr>
+<tr class="even">
+<td>Total Valid Votes</td>
+<td>Total No of Valid Votes</td>
+</tr>
+<tr class="odd">
+<td>Number of Rejected Votes</td>
+<td>No of Rejected Votes</td>
+</tr>
+<tr class="even">
+<td>Rejected Votes</td>
+<td>No of Rejected Votes</td>
+</tr>
+<tr class="odd">
+<td>Number of Votes Polled</td>
+<td>Total No of Votes Polled</td>
+</tr>
+<tr class="even">
+<td>Total Polled</td>
+<td>Total No of Votes Polled</td>
+</tr>
+<tr class="odd">
+<td>Number of Registered Electors</td>
+<td>No of Registered Electors</td>
+</tr>
+<tr class="even">
+<td>Number of Registered No of Electors</td>
+<td>No of Registered Electors</td>
+</tr>
+<tr class="odd">
+<td>Registered No of Electors</td>
+<td>No of Registered Electors</td>
+</tr>
+</tbody>
+</table>
+<p>Rows matching the standardised summary labels are classified as
+summaries. The remaining result rows are classified as candidates.</p>
+</div>
+<div id="prepared-percentages" class="section level2">
+<h2>Prepared percentages</h2>
+<p>ODS percentages may be imported as numeric proportions or as
+displayed text containing a percent sign.</p>
+<p>Values containing a percent sign are divided by 100 to obtain
+proportions. Values without a percent sign are treated as proportions
+already. During preparation of the final dataset, these proportions are
+multiplied by 100 and rounded to two decimal places.</p>
+<p>For example, an imported proportion of <code>0.5949</code> becomes
+<code>59.49</code> in the final <code>Percentage</code> column. This
+changes the storage scale rather than recalculating the printed
+percentage from vote counts.</p>
+<p>Unavailable percentages, including nonnumeric dash entries, become
+missing values.</p>
+</div>
+<div id="checked-worksheet-structure" class="section level2">
+<h2>Checked worksheet structure</h2>
+<p>The script constructs a worksheet-level diagnostic table
+containing:</p>
+<ul>
+<li>Number of candidate rows.</li>
+<li>Number of summary rows.</li>
+<li>Number of missing vote counts.</li>
+<li>Number of missing percentages.</li>
+</ul>
+<p>The expected structure is 38 candidates and four summaries per
+worksheet.</p>
+<p>The stopping condition associated with this diagnostic table is
+commented out in the supplied script. Consequently, the diagnostic
+identifies structural or missing-value issues but does not itself stop
+execution.</p>
+<p>A missing registered-elector percentage may be expected where the
+source does not supply one; the diagnostic currently counts it alongside
+other missing percentages.</p>
+</div>
+<div id="checked-vote-totals-and-candidate-percentages" class="section level2">
+<h2>Checked vote totals and candidate percentages</h2>
+<p>For each worksheet, the script calculates:</p>
+<p><span class="math display">\[
+\text{Candidate difference}
+=
+\sum_{i=1}^{38}\text{Candidate votes}_i
+-
+\text{Total valid votes}
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\text{Polling difference}
+=
+\text{Total valid votes}
++
+\text{Rejected votes}
+-
+\text{Votes polled}.
+\]</span></p>
+<p>Execution stops when a nonzero difference is detected.</p>
+<p>Candidate percentages are checked against:</p>
+<p><span class="math display">\[
+\text{Candidate percentage}_i
+=
+100 \times
+\frac{\text{Candidate votes}_i}{\text{Total valid votes}}.
+\]</span></p>
+<p>Both calculated and stored percentages are rounded to two decimal
+places. Execution stops when the absolute difference exceeds
+<code>0.010001</code> percentage points.</p>
+<p>These checks identify arithmetic inconsistencies in the imported
+data. They do not independently verify the figures against the original
+PDFs. Missing values require separate inspection because comparisons
+involving missing values are not retained by the discrepancy
+filters.</p>
+</div>
+<div id="standardised-candidate-names" class="section level2">
+<h2>Standardised candidate names</h2>
+<p>A supplied list of 38 canonical candidate names is used across all
+worksheets. The list is checked for its length, missing values, and
+duplicate names.</p>
+<p>Candidates are assigned sequential positions within each worksheet.
+The original name at each position is then compared with the
+corresponding canonical name.</p>
+<p>Two comparisons are produced:</p>
+<ul>
+<li>An exact comparison preserving spelling and capitalisation.</li>
+<li>A diagnostic comparison that ignores capitalisation, whitespace, and
+full stops.</li>
+</ul>
+<p>The diagnostic lowercasing is confined to temporary comparison
+columns. It does not lowercase the names stored in the final
+dataset.</p>
+<p>Differences are summarised by candidate and worksheet. Differences
+that remain after diagnostic normalisation produce a message requesting
+manual review of candidate order.</p>
+<p>Canonical names are then assigned by candidate position. This step
+depends on confirming that every worksheet uses the same candidate
+order. The review message does not pause execution automatically.</p>
+<p>After replacement, the script checks that the combined data contain
+38 distinct candidate names and that every worksheet contains 38
+candidate records with 38 distinct names.</p>
+</div>
+<div id="prepared-reporting-labels-and-dataset-columns" class="section level2">
+<h2>Prepared reporting labels and dataset columns</h2>
+<p>Worksheet names are classified as postal votes, district totals, or
+polling divisions.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Reporting category</th>
+<th>Final electorate label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Postal votes</td>
+<td>Postal District Votes</td>
+</tr>
+<tr class="even">
+<td>District total</td>
+<td>Final District Results</td>
+</tr>
+<tr class="odd">
+<td>Polling division</td>
+<td>Name derived from the worksheet</td>
+</tr>
+</tbody>
+</table>
+<p>For polling divisions, a leading letter prefix such as
+<code>A -</code> is removed. Whitespace is condensed and remaining
+spaces are replaced with hyphens.</p>
+<p>The prepared dataset contains:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Year</td>
+<td>Election year: 2024</td>
+</tr>
+<tr class="even">
+<td>District</td>
+<td>Electoral district name</td>
+</tr>
+<tr class="odd">
+<td>Electorate</td>
+<td>Polling division or reporting category</td>
+</tr>
+<tr class="even">
+<td>ColNames</td>
+<td>Candidate name or standardised summary label</td>
+</tr>
+<tr class="odd">
+<td>Votes</td>
+<td>Candidate votes or summary count</td>
+</tr>
+<tr class="even">
+<td>Percentage</td>
+<td>Percentage on a 0–100 scale</td>
+</tr>
+</tbody>
+</table>
+<p>The script stops if duplicate combinations of <code>Year</code>,
+<code>District</code>, <code>Electorate</code>, and
+<code>ColNames</code> are detected at this stage.</p>
+</div>
+<div id="aligned-district-names" class="section level2">
+<h2>Aligned district names</h2>
+<p>The 2024 data are combined with the earlier election CSV files.
+District presence tables are constructed for inspection before and after
+applying these replacements:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Original district label</th>
+<th>Replacement label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kandy</td>
+<td>Mahanuwara</td>
+</tr>
+<tr class="even">
+<td>Nuwara Eliya</td>
+<td>Nuwara-Eliya</td>
+</tr>
+</tbody>
+</table>
+<p>These replacements are applied to the combined dataset without a year
+restriction.</p>
+<p>The proposed replacement of <code>Moneragala</code> with
+<code>Monaragala</code> is commented out in the supplied script and is
+not applied at this step.</p>
+<p>Capitalisation is preserved in the explicit replacement labels.</p>
+</div>
+<div id="calculated-district-totals" class="section level2">
+<h2>Calculated district totals</h2>
+<p>The script constructs 2024 district totals from the imported
+component results. These are calculated aggregates rather than
+independently imported official district-total tables.</p>
+<p>Existing <code>Final District Results</code> and
+<code>Displaced District Votes</code> rows are excluded from the
+aggregation base.</p>
+<p>Candidate votes, valid votes, rejected votes, and votes polled are
+summed across the remaining component tables, including postal
+votes.</p>
+<p>Registered electors are summed from ordinary polling divisions.
+Postal registered-elector rows are excluded from this calculation to
+avoid double-counting.</p>
+<p>District percentages are calculated using the following
+denominators:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Row type</th>
+<th>Percentage denominator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Candidate votes</td>
+<td>Total valid votes</td>
+</tr>
+<tr class="even">
+<td>Total valid votes</td>
+<td>Votes polled</td>
+</tr>
+<tr class="odd">
+<td>Rejected votes</td>
+<td>Votes polled</td>
+</tr>
+<tr class="even">
+<td>Votes polled</td>
+<td>Registered electors</td>
+</tr>
+<tr class="odd">
+<td>Registered electors</td>
+<td>Percentage left missing</td>
+</tr>
+</tbody>
+</table>
+<p>Calculated percentages are rounded to two decimal places. Thus,
+polling-division and postal percentages retain their source values,
+whereas the newly constructed district percentages are calculated.</p>
+<p>The district-level checks require:</p>
+<ul>
+<li>Candidate votes to sum to total valid votes.</li>
+<li>Valid votes plus rejected votes to equal votes polled.</li>
+<li>Votes polled not to exceed registered electors.</li>
+</ul>
+<p>The calculated tables are labelled
+<code>Final District Results</code> and appended to the combined
+dataset. A subsequent check requires 42 district-total rows for each
+district represented in that check.</p>
+<p>The append step assumes that existing 2024 district-total rows are
+absent from the combined dataset. Excluding them from the aggregation
+base does not remove them before the calculated totals are appended.</p>
+</div>
+<div id="aligned-electorate-names-with-2015" class="section level2">
+<h2>Aligned electorate names with 2015</h2>
+<p>The following 21 district-specific mappings are applied only to 2024
+records.</p>
+<table>
+<thead>
+<tr class="header">
+<th>District</th>
+<th>Original electorate label</th>
+<th>Replacement label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Anuradhapura</td>
+<td>Horowpathana</td>
+<td>Horowapatana</td>
+</tr>
+<tr class="even">
+<td>Anuradhapura</td>
+<td>Mihinthale</td>
+<td>Mihintale</td>
+</tr>
+<tr class="odd">
+<td>Badulla</td>
+<td>Haliela</td>
+<td>Hali-Ela</td>
+</tr>
+<tr class="even">
+<td>Badulla</td>
+<td>Haputhale</td>
+<td>Haputale</td>
+</tr>
+<tr class="odd">
+<td>Badulla</td>
+<td>Mahiyangana</td>
+<td>Mahiyangane</td>
+</tr>
+<tr class="even">
+<td>Badulla</td>
+<td>Uvaparanagama</td>
+<td>Uva-Paranagama</td>
+</tr>
+<tr class="odd">
+<td>Digamadulla</td>
+<td>Pothuvil</td>
+<td>Pottuvil</td>
+</tr>
+<tr class="even">
+<td>Gampaha</td>
+<td>Negambo</td>
+<td>Negombo</td>
+</tr>
+<tr class="odd">
+<td>Jaffna</td>
+<td>Kopai</td>
+<td>Kopay</td>
+</tr>
+<tr class="even">
+<td>Jaffna</td>
+<td>Uduppiddy</td>
+<td>Udupiddy</td>
+</tr>
+<tr class="odd">
+<td>Jaffna</td>
+<td>Vadducoddai</td>
+<td>Vaddukkoddai</td>
+</tr>
+<tr class="even">
+<td>Kurunegala</td>
+<td>Paduwasnuwara</td>
+<td>Panduwasnuwara</td>
+</tr>
+<tr class="odd">
+<td>Mahanuwara</td>
+<td>Hewahata</td>
+<td>Hewaheta</td>
+</tr>
+<tr class="even">
+<td>Mahanuwara</td>
+<td>Patadumbara</td>
+<td>Patha-Dumbara</td>
+</tr>
+<tr class="odd">
+<td>Mahanuwara</td>
+<td>Udadumbara</td>
+<td>Udu-Dumbara</td>
+</tr>
+<tr class="even">
+<td>Monaragala</td>
+<td>Bibila</td>
+<td>Bibile</td>
+</tr>
+<tr class="odd">
+<td>Monaragala</td>
+<td>Moneragala</td>
+<td>Monaragala</td>
+</tr>
+<tr class="even">
+<td>Nuwara-Eliya</td>
+<td>Kothmale</td>
+<td>Kotmale</td>
+</tr>
+<tr class="odd">
+<td>Nuwara-Eliya</td>
+<td>N.E.-Maskeliya</td>
+<td>Nuwara-Eliya-Maskeliya</td>
+</tr>
+<tr class="even">
+<td>Ratnapura</td>
+<td>Nivithigala</td>
+<td>Nivitigala</td>
+</tr>
+<tr class="odd">
+<td>Trincomalee</td>
+<td>Muthur</td>
+<td>Mutur</td>
+</tr>
+</tbody>
+</table>
+<p>The mappings use exact district and electorate labels. Their
+application therefore depends on the district labels already matching
+those shown in the table.</p>
+<p>District–electorate presence tables are reconstructed after the
+mappings to support comparison across election years. These tables
+support manual inspection; they do not automatically assert that all
+expected names match.</p>
+</div>
+<div id="export-and-interpretation" class="section level2">
+<h2>Export and interpretation</h2>
+<p>The final export includes the calculated district totals and the
+district and electorate name changes applied after the initial ODS
+import.</p>
+<p>Component tables and district totals represent different reporting
+levels. They should be analysed separately to avoid double-counting.</p>
+<p>The supplied code implements worksheet-level arithmetic checks,
+candidate-name consistency checks, and checks on calculated district
+totals. It does not independently compare those calculated totals with
+official district-total tables or assert a country-level
+reconciliation.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
